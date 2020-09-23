@@ -236,13 +236,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   floorSprite: {fileID: 6190535757637498407, guid: 48f345a0b747a254bac5fece3672d12e, type: 3}
-  boidSPrite: {fileID: 8090356219043626012, guid: 9d777ebeb2648fb49b4f38d1ea129760, type: 3}
-  boidsCount: 5
-  maxVelocity: 2
-  moveCloser: 2
-  moveWith: 1
-  moveAway: 0.2
-  neighborDist: 8.1
+  wallSprite: {fileID: 4078069333962525697, guid: eb87f8d72e0dc6244bd2c536b95374cd, type: 3}
+  boidSprite: {fileID: 8090356219043626012, guid: 9d777ebeb2648fb49b4f38d1ea129760, type: 3}
+  boidsCount: 30
+  maxVelocity: 3.73
+  maxForce: 0.31
+  separationAmount: 1.24
+  cohesionAmount: 1.65
+  alignmentAmount: 1.81
+  neighborDist: 2.08
   minDist: 0.98
 --- !u!4 &749343311
 Transform:

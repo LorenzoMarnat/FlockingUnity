@@ -97,6 +97,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawner: {fileID: 0}
+  rb: {fileID: 0}
+  velocity: {x: 0, y: 0}
+  acceleration: {x: 0, y: 0}
+  id: 0
 --- !u!50 &-8725286414835628849
 Rigidbody2D:
   serializedVersion: 4
