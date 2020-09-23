@@ -6,11 +6,9 @@ public class Spawner : MonoBehaviour
 {
     public GameObject floorSprite;
 
-    //public GameObject wallSprite;
-
     public GameObject boidSprite;
 
-    public int boidsCount;
+    public int boidsCount = 10;
 
     [Range(0.1f,10)]
     public float maxVelocity;
@@ -18,25 +16,17 @@ public class Spawner : MonoBehaviour
     [Range(.1f, .5f)]
     public float maxForce = .03f;
 
-    /*public int moveCloser;
-
-    public int moveWith;
-
-    public float moveAway;*/
     [Range(0, 3)]
-    public float separationAmount = 1f;
+    public float separation = 1f;
 
     [Range(0, 3)]
-    public float cohesionAmount = 1f;
+    public float cohesion = 1f;
 
     [Range(0, 3)]
-    public float alignmentAmount = 1f;
+    public float alignment = 1f;
 
     [Range(0.1f,10)]
     public float neighborDist;
-
-    /*[Range(0.1f,2)]
-    public float minDist;*/
 
     // Start is called before the first frame update
     void Start()
@@ -55,21 +45,6 @@ public class Spawner : MonoBehaviour
                 tile.transform.position = new Vector2(i, j);
             }
         }
-        /*for(int i = 0;i<20;i++)
-        {
-            GameObject tile;
-            tile = Instantiate(wallSprite, transform);
-            tile.transform.position = new Vector2(i, -1);
-
-            tile = Instantiate(wallSprite, transform);
-            tile.transform.position = new Vector2(i, 20);
-
-            tile = Instantiate(wallSprite, transform);
-            tile.transform.position = new Vector2(-1, i);
-
-            tile = Instantiate(wallSprite, transform);
-            tile.transform.position = new Vector2(20, i);
-        }*/
     }
 
     private void CreateBoids()
@@ -83,9 +58,5 @@ public class Spawner : MonoBehaviour
             boid.GetComponent<Boid>().id = i;
         }
     }
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
