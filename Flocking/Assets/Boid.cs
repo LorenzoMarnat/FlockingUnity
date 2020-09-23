@@ -15,7 +15,7 @@ public class Boid : MonoBehaviour
     {
         float angle = Random.Range(0, 2 * Mathf.PI);
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-        velocity = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle));
+        velocity = new Vector2(Mathf.Cos(angle)*3, Mathf.Sin(angle)*3);
     }
 
     private float Distance(GameObject boid)
@@ -63,8 +63,23 @@ public class Boid : MonoBehaviour
             }
         }
 
-        Flock(nearbyBoids);
+        GameObject[] allWalls = GameObject.FindGameObjectsWithTag("Wall");
 
+        List<GameObject> nearbyWalls = new List<GameObject>();
+
+        foreach (GameObject wall in allWalls)
+            if (Distance(wall) <= 2)
+                nearbyWalls.Add(wall);
+
+        Flock(nearbyBoids,nearbyWalls);
+
+        UpdateBoid();
+
+        OutOfBounds();
+    }
+
+    private void UpdateBoid()
+    {
         velocity += acceleration;
         velocity = LimitMagnitude(velocity, spawner.maxVelocity);
 
@@ -72,19 +87,39 @@ public class Boid : MonoBehaviour
 
         float angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
-
-        OutOfBounds();
     }
 
-    private void Flock(List<GameObject> boids)
+    private void Flock(List<GameObject> boids, List<GameObject> walls)
     {
-        Vector2 alignment = Alignment(boids);
-        Vector2 separation = Separation(boids);
-        Vector2 cohesion = Cohesion(boids);
-
-        acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation;
+        Vector2 avoidWalls = AvoidWalls(walls);
+        if (spawner.state.GetState() == 1)
+        {
+            Vector2 alignment = Alignment(boids);
+            Vector2 separation = Separation(boids);
+            Vector2 cohesion = Cohesion(boids);
+            acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls;
+        }
+        else
+            acceleration = avoidWalls * spawner.avoidWalls;
     }
 
+    private Vector2 AvoidWalls(List<GameObject> walls)
+    {
+        if(walls.Count < 1) return Vector2.zero;
+
+        Vector2 direction = Vector2.zero;
+
+        foreach (GameObject wall in walls)
+        {
+            Vector2 difference = (Vector2)transform.position - (Vector2)wall.transform.position;
+            direction += difference.normalized / difference.magnitude;
+        }
+        direction /= walls.Count;
+
+        Vector2 steer = Steer(direction.normalized * spawner.maxVelocity);
+        return steer;
+
+    }
     private Vector2 Alignment(List<GameObject> boids)
     {
         Vector2 velocity = Vector2.zero;
@@ -137,7 +172,7 @@ public class Boid : MonoBehaviour
             Vector2 difference = (Vector2)transform.position - (Vector2)boid.transform.position;
             direction += difference.normalized / difference.magnitude;
         }
-        direction /= boids.Count;
+        direction /= sepBoids.Count;
 
         Vector2 steer = Steer(direction.normalized * spawner.maxVelocity);
         return steer;

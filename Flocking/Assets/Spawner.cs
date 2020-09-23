@@ -4,6 +4,20 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public struct State
+    {   
+        private int currentState { get; set; }
+        public void SetState(int state) 
+        {
+            currentState = state;
+        }
+        public int GetState()
+        {
+            return currentState;
+        }
+    }
+    public State state;
+
     public GameObject floorSprite;
 
     public GameObject boidSprite;
@@ -25,12 +39,17 @@ public class Spawner : MonoBehaviour
     [Range(0, 3)]
     public float alignment = 1f;
 
+    [Range(0, 50)]
+    public float avoidWalls = 10f;
+
     [Range(0.1f,10)]
     public float neighborDist;
 
     // Start is called before the first frame update
     void Start()
     {
+        state.SetState(0);
+
         CreateGrid();
         CreateBoids();
     }
@@ -46,7 +65,6 @@ public class Spawner : MonoBehaviour
             }
         }
     }
-
     private void CreateBoids()
     {
         for(int i= 0; i<boidsCount; i++)
@@ -56,6 +74,21 @@ public class Spawner : MonoBehaviour
             boid.transform.rotation = Quaternion.identity;
             boid.GetComponent<Boid>().spawner = this;
             boid.GetComponent<Boid>().id = i;
+        }
+    }
+
+    private void Update()
+    {
+        // Roam
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            state.SetState(0);
+        }
+
+        // Flock
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            state.SetState(1);
         }
     }
 
