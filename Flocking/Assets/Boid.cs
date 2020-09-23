@@ -58,9 +58,7 @@ public class Boid : MonoBehaviour
                 continue;
 
             if(Distance(boid) <= spawner.neighborDist)
-            {
                 nearbyBoids.Add(boid);
-            }
         }
 
         GameObject[] allWalls = GameObject.FindGameObjectsWithTag("Wall");
@@ -71,7 +69,11 @@ public class Boid : MonoBehaviour
             if (Distance(wall) <= 2)
                 nearbyWalls.Add(wall);
 
-        Flock(nearbyBoids,nearbyWalls);
+        bool nearPlayer = false;
+        if (Distance(spawner.player) < spawner.playerDist)
+            nearPlayer = true;
+
+        Flock(nearbyBoids,nearbyWalls,nearPlayer);
 
         UpdateBoid();
 
@@ -89,18 +91,31 @@ public class Boid : MonoBehaviour
         transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
     }
 
-    private void Flock(List<GameObject> boids, List<GameObject> walls)
+    private void Flock(List<GameObject> boids, List<GameObject> walls, bool player)
     {
         Vector2 avoidWalls = AvoidWalls(walls);
-        if (spawner.state.GetState() == 1)
+
+        // Si l'état est Roam
+        if (spawner.state.GetState() == 0)
+        {
+            acceleration = avoidWalls * spawner.avoidWalls;
+        }
+        else
         {
             Vector2 alignment = Alignment(boids);
             Vector2 separation = Separation(boids);
             Vector2 cohesion = Cohesion(boids);
-            acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls;
+            // Si l'état est Follow
+            if (spawner.state.GetState() == 2)
+            {
+                Vector2 alignmentPlayer = AlignmentPlayer(player);
+                Vector2 cohesionPlayer = CohesionPlayer(player);
+                acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls + spawner.alignmentPlayer * alignmentPlayer + spawner.cohesionPlayer * cohesionPlayer;
+            }
+            // Si l'état est Flock
+            else
+                acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls;
         }
-        else
-            acceleration = avoidWalls * spawner.avoidWalls;
     }
 
     private Vector2 AvoidWalls(List<GameObject> walls)
@@ -185,6 +200,7 @@ public class Boid : MonoBehaviour
 
         return steer;
     }
+
     private Vector2 LimitMagnitude(Vector2 baseVector, float maxMagnitude)
     {
         if (baseVector.sqrMagnitude > maxMagnitude * maxMagnitude)
@@ -192,5 +208,27 @@ public class Boid : MonoBehaviour
             baseVector = baseVector.normalized * maxMagnitude;
         }
         return baseVector;
+    }
+
+    private Vector2 AlignmentPlayer(bool player)
+    {
+        if (!player) return Vector2.zero;
+
+        Vector2 velocity = Vector2.zero;
+
+        velocity += spawner.player.GetComponent<Rigidbody2D>().velocity;
+
+        Vector2 steer = Steer(velocity.normalized * spawner.maxVelocity);
+        return steer;
+    }
+
+    private Vector2 CohesionPlayer(bool player)
+    {
+        if (!player) return Vector2.zero;
+
+        Vector2 direction = (Vector2)spawner.player.transform.position - (Vector2)transform.position;
+
+        Vector2 steer = Steer(direction.normalized * spawner.maxVelocity);
+        return steer;
     }
 }

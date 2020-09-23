@@ -16,6 +16,9 @@ public class Spawner : MonoBehaviour
             return currentState;
         }
     }
+
+    public GameObject player;
+
     public State state;
 
     public GameObject floorSprite;
@@ -43,7 +46,16 @@ public class Spawner : MonoBehaviour
     public float avoidWalls = 10f;
 
     [Range(0.1f,10)]
-    public float neighborDist;
+    public float neighborDist = 2;
+
+    [Range(0, 5)]
+    public float cohesionPlayer = 3f;
+
+    [Range(0, 5)]
+    public float alignmentPlayer = 3f;
+
+    [Range(0.1f, 10)]
+    public float playerDist = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -89,6 +101,12 @@ public class Spawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z))
         {
             state.SetState(1);
+        }
+
+        // Follow
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            state.SetState(2);
         }
     }
 
