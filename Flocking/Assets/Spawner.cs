@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
     public float alignment = 1f;
 
     [Range(0, 5)]
-    public float avoidWalls = 10f;
+    public float avoidWalls = 3f;
 
     [Range(0.1f,10)]
     public float neighborDist = 2;
@@ -65,7 +65,7 @@ public class Spawner : MonoBehaviour
     {
         state.SetState(0);
 
-        CreateGrid();
+        //CreateGrid();
         CreateBoids();
     }
     private void CreateGrid()
