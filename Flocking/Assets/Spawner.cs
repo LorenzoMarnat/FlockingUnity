@@ -42,7 +42,7 @@ public class Spawner : MonoBehaviour
     [Range(0, 3)]
     public float alignment = 1f;
 
-    [Range(0, 50)]
+    [Range(0, 5)]
     public float avoidWalls = 10f;
 
     [Range(0.1f,10)]
@@ -53,6 +53,9 @@ public class Spawner : MonoBehaviour
 
     [Range(0, 5)]
     public float alignmentPlayer = 3f;
+
+    [Range(0, 5)]
+    public float avoidPlayer = 3f;
 
     [Range(0.1f, 10)]
     public float playerDist = 2;
@@ -107,6 +110,12 @@ public class Spawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.E))
         {
             state.SetState(2);
+        }
+
+        // Fear
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            state.SetState(3);
         }
     }
 

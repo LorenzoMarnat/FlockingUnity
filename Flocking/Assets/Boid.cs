@@ -112,9 +112,19 @@ public class Boid : MonoBehaviour
                 Vector2 cohesionPlayer = CohesionPlayer(player);
                 acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls + spawner.alignmentPlayer * alignmentPlayer + spawner.cohesionPlayer * cohesionPlayer;
             }
-            // Si l'état est Flock
             else
-                acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls;
+            {
+                // Si l'état est Fear
+                if(spawner.state.GetState() == 3)
+                {
+                    Vector2 avoidPlayer = AvoidPlayer(player);
+                    acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls + avoidPlayer * spawner.avoidPlayer;
+                }
+                // Si l'état est Flock
+                else
+                    acceleration = spawner.alignment * alignment + spawner.cohesion * cohesion + spawner.separation * separation + avoidWalls * spawner.avoidWalls;
+            }
+
         }
     }
 
@@ -230,5 +240,19 @@ public class Boid : MonoBehaviour
 
         Vector2 steer = Steer(direction.normalized * spawner.maxVelocity);
         return steer;
+    }
+
+    private Vector2 AvoidPlayer(bool player)
+    {
+        if (!player) return Vector2.zero;
+
+        Vector2 direction = Vector2.zero;
+
+        Vector2 difference = (Vector2)transform.position - (Vector2)spawner.player.transform.position;
+        direction += difference.normalized / difference.magnitude;
+
+        Vector2 steer = Steer(direction.normalized * spawner.maxVelocity);
+        return steer;
+
     }
 }
