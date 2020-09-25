@@ -46,6 +46,9 @@ TagManager:
   - name: Background
     uniqueID: 3458525287
     locked: 0
+  - name: Obstacle
+    uniqueID: 3097174865
+    locked: 0
   - name: Boid
     uniqueID: 3394909735
     locked: 0
