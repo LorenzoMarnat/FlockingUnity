@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Spawner : MonoBehaviour
 {
@@ -17,11 +18,11 @@ public class Spawner : MonoBehaviour
         }
     }
 
+    public GameObject text;
+
     public GameObject player;
 
     public State state;
-
-    public GameObject floorSprite;
 
     public GameObject boidSprite;
 
@@ -65,20 +66,7 @@ public class Spawner : MonoBehaviour
     {
         state.SetState(0);
 
-        //CreateGrid();
         CreateBoids();
-    }
-    private void CreateGrid()
-    {
-        for (int i = -7; i < 27; i++)
-        {
-            for (int j = 0; j < 20; j++)
-            {
-                GameObject tile;
-                tile = Instantiate(floorSprite, transform);
-                tile.transform.position = new Vector2(i, j);
-            }
-        }
     }
     private void CreateBoids()
     {
@@ -98,24 +86,28 @@ public class Spawner : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             state.SetState(0);
+            text.GetComponent<Text>().text = "Roam";
         }
 
         // Flock
         if (Input.GetKeyDown(KeyCode.Z))
         {
             state.SetState(1);
+            text.GetComponent<Text>().text = "Flock";
         }
 
         // Follow
         if (Input.GetKeyDown(KeyCode.E))
         {
             state.SetState(2);
+            text.GetComponent<Text>().text = "Follow";
         }
 
         // Fear
         if (Input.GetKeyDown(KeyCode.R))
         {
             state.SetState(3);
+            text.GetComponent<Text>().text = "Fear";
         }
     }
 
