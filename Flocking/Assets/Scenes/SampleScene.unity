@@ -420,11 +420,11 @@ MonoBehaviour:
   separation: 1
   cohesion: 1
   alignment: 1
-  avoidWalls: 1.57
+  avoidWalls: 3.45
   neighborDist: 3.31
   cohesionPlayer: 1.8
   alignmentPlayer: 1.85
-  avoidPlayer: 2.1
+  avoidPlayer: 2.2
   playerDist: 4
 --- !u!4 &749343311
 Transform:
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
+  m_Color: {r: 1, g: 0, b: 0.1245265, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
